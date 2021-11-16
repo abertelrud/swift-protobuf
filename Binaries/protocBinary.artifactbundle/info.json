@@ -1,0 +1,15 @@
+{
+    "schemaVersion": "1.0",
+    "artifacts": {
+        "protoc": {
+            "type": "executable",
+            "version": "3.15.6",
+            "variants": [
+                {
+                    "path": "protoc-3.15.6-osx-x86_64/bin/protoc",
+                    "supportedTriples": ["x86_64-apple-macosx", "arm64-apple-macosx"]
+                },
+            ]
+        }
+    }
+}

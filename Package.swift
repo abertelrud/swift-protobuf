@@ -1,4 +1,4 @@
-// swift-tools-version:4.2
+// swift-tools-version: 5.6
 
 // Package.swift
 //
@@ -17,19 +17,29 @@ let package = Package(
     .executable(name: "protoc-gen-swift", targets: ["protoc-gen-swift"]),
     .library(name: "SwiftProtobuf", targets: ["SwiftProtobuf"]),
     .library(name: "SwiftProtobufPluginLibrary", targets: ["SwiftProtobufPluginLibrary"]),
+    .plugin(name: "SwiftProtobufPlugin", targets: ["SwiftProtobufPlugin"]),
   ],
   targets: [
-    .target(name: "SwiftProtobuf"),
+    .target(name: "SwiftProtobuf",
+        exclude: ["CMakeLists.txt"]),
     .target(name: "SwiftProtobufPluginLibrary",
-            dependencies: ["SwiftProtobuf"]),
-    .target(name: "protoc-gen-swift",
-            dependencies: ["SwiftProtobufPluginLibrary", "SwiftProtobuf"]),
-    .target(name: "Conformance",
-            dependencies: ["SwiftProtobuf"]),
+        dependencies: ["SwiftProtobuf"],
+        exclude: ["CMakeLists.txt"]),
+    .executableTarget(name: "protoc-gen-swift",
+        dependencies: ["SwiftProtobufPluginLibrary", "SwiftProtobuf"],
+        exclude: ["CMakeLists.txt"]),
+    .plugin(name: "SwiftProtobufPlugin",
+        capability: .buildTool(),
+        dependencies: ["protocBinary", "protoc-gen-swift"]),
+    .binaryTarget(name: "protocBinary",
+        path: "Binaries/protocBinary.artifactbundle"),
+    .executableTarget(name: "Conformance",
+        dependencies: ["SwiftProtobuf"],
+        exclude: ["text_format_failure_list_swift.txt", "failure_list_swift.txt"]),
     .testTarget(name: "SwiftProtobufTests",
-                dependencies: ["SwiftProtobuf"]),
+        dependencies: ["SwiftProtobuf"]),
     .testTarget(name: "SwiftProtobufPluginLibraryTests",
-                dependencies: ["SwiftProtobufPluginLibrary"]),
+        dependencies: ["SwiftProtobufPluginLibrary"]),
   ],
   swiftLanguageVersions: [.v4, .v4_2, .version("5")]
 )
